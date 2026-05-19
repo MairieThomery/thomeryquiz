@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bleu:  #5BADD6;
+    --jaune: #D4B84A;
+    --gris:  #6B6457;
+    --vert:  #5A9E00;
+    --blanc: #FAFAF8;
+    --fond:  #F2EFE8;
+    --texte: #2A2820;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--fond); color: var(--texte); min-height: 100vh; }
+
+  header {
+    background: var(--texte);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+  }
+  .logo-zone { display: flex; align-items: center; gap: 14px; cursor: pointer; position: relative; }
+  .logo-img {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--bleu); display: flex; align-items: center; justify-content: center;
+    overflow: hidden; border: 2px solid rgba(255,255,255,0.15);
+  }
+  .logo-img svg { width: 26px; height: 26px; }
+  .logo-img img { width: 100%; height: 100%; object-fit: cover; }
+  .logo-name { font-family: 'Playfair Display', serif; color: #fff; font-size: 17px; letter-spacing: 0.02em; }
+  .logo-sub { font-size: 10px; color: rgba(255,255,255,0.45); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 1px; display: block; }
+  .logo-upload-hint {
+    position: absolute; bottom: -30px; left: 0;
+    background: var(--bleu); color: #fff; font-size: 11px;
+    padding: 4px 10px; border-radius: 6px; white-space: nowrap;
+    opacity: 0; transition: opacity 0.2s; pointer-events: none;
+  }
+  .logo-zone:hover .logo-upload-hint { opacity: 1; }
+  #logo-file { display: none; }
+  .header-badge {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.7); font-size: 12px; padding: 6px 14px;
+    border-radius: 20px; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  .hero {
+    background: var(--texte); padding: 56px 40px 72px; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; right: -60px; top: -60px;
+    width: 320px; height: 320px; border-radius: 50%; background: var(--bleu); opacity: 0.08;
+  }
+  .hero::after {
+    content: ''; position: absolute; right: 80px; bottom: -80px;
+    width: 200px; height: 200px; border-radius: 50%; background: var(--jaune); opacity: 0.1;
+  }
+  .hero-eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--jaune); margin-bottom: 16px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: 42px; color: #fff; line-height: 1.15; max-width: 480px; margin-bottom: 18px; }
+  .hero p { color: rgba(255,255,255,0.55); font-size: 15px; max-width: 400px; line-height: 1.7; }
+
+  .quiz-wrapper { max-width: 700px; margin: -32px auto 60px; padding: 0 24px; position: relative; z-index: 10; }
+
+  .progress-bar-wrap {
+    background: #fff; border-radius: var(--radius); padding: 20px 28px; margin-bottom: 20px;
+    border: 1px solid rgba(0,0,0,0.07); display: flex; align-items: center; gap: 20px;
+  }
+  .progress-track { flex: 1; height: 6px; background: #E8E4DC; border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--bleu), var(--vert)); border-radius: 3px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+  .progress-label { font-size: 13px; color: var(--gris); white-space: nowrap; font-weight: 500; }
+  .score-badge { background: var(--texte); color: var(--jaune); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+
+  .card { background: #fff; border-radius: var(--radius); padding: 36px 40px; border: 1px solid rgba(0,0,0,0.07); animation: slideUp 0.4s cubic-bezier(.4,0,.2,1); }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .q-number { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bleu); font-weight: 600; margin-bottom: 14px; }
+  .q-text { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--texte); line-height: 1.4; margin-bottom: 10px; }
+  .q-hint { font-size: 13px; color: var(--gris); margin-bottom: 30px; font-style: italic; }
+
+  .choices { display: flex; flex-direction: column; gap: 12px; }
+  .choice-btn {
+    display: flex; align-items: center; gap: 16px; padding: 16px 20px;
+    border: 1.5px solid #E4E0D8; border-radius: 10px; background: var(--fond);
+    cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--texte);
+    text-align: left; transition: border-color 0.18s, background 0.18s, transform 0.12s;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: var(--bleu); background: #EDF5FB; transform: translateX(4px); }
+  .choice-btn:disabled { cursor: default; }
+  .choice-letter {
+    width: 32px; height: 32px; border-radius: 8px; background: #fff; border: 1.5px solid #DDD;
+    display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600;
+    color: var(--gris); flex-shrink: 0; transition: background 0.18s, color 0.18s;
+  }
+  .choice-btn.correct { border-color: var(--vert); background: #EEF7E6; }
+  .choice-btn.correct .choice-letter { background: var(--vert); color: #fff; border-color: var(--vert); }
+  .choice-btn.wrong { border-color: #D64040; background: #FBF0F0; }
+  .choice-btn.wrong .choice-letter { background: #D64040; color: #fff; border-color: #D64040; }
+
+  .feedback-badge {
+    margin-top: 20px; padding: 14px 20px; border-radius: 10px;
+    display: flex; align-items: center; gap: 12px; font-size: 14px; line-height: 1.5;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .feedback-badge.vrai { background: #EEF7E6; border-left: 4px solid var(--vert); color: #2D6010; }
+  .feedback-badge.faux { background: #FBF0F0; border-left: 4px solid #D64040; color: #8C1C1C; }
+  .feedback-icon { font-size: 22px; flex-shrink: 0; }
+  .feedback-text strong { display: block; font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+
+  .next-btn {
+    margin-top: 28px; width: 100%; padding: 16px; background: var(--texte); color: #fff;
+    border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px;
+    font-weight: 500; cursor: pointer; letter-spacing: 0.04em;
+    transition: background 0.18s, transform 0.12s; display: none;
+  }
+  .next-btn:hover { background: #444; transform: translateY(-1px); }
+
+  .results-card { background: #fff; border-radius: var(--radius); padding: 48px 40px; text-align: center; border: 1px solid rgba(0,0,0,0.07); animation: slideUp 0.5s cubic-bezier(.4,0,.2,1); }
+  .results-circle { width: 110px; height: 110px; border-radius: 50%; background: var(--texte); margin: 0 auto 28px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  .results-score-big { font-family: 'Playfair Display', serif; font-size: 34px; color: var(--jaune); line-height: 1; }
+  .results-score-denom { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .results-title { font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 10px; }
+  .results-sub { color: var(--gris); font-size: 15px; margin-bottom: 32px; line-height: 1.6; }
+  .results-breakdown { display: flex; justify-content: center; gap: 24px; margin-bottom: 36px; }
+  .breakdown-item { text-align: center; padding: 16px 24px; background: var(--fond); border-radius: 10px; min-width: 100px; }
+  .breakdown-num { font-size: 28px; font-weight: 600; color: var(--texte); }
+  .breakdown-num.green { color: var(--vert); }
+  .breakdown-num.red   { color: #D64040; }
+  .breakdown-lbl { font-size: 12px; color: var(--gris); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .restart-btn { padding: 16px 40px; background: var(--texte); color: #fff; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.18s; }
+  .restart-btn:hover { background: #444; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-zone" onclick="document.getElementById('logo-file').click()">
+    <div class="logo-img" id="logoContainer">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="10" width="22" height="14" rx="2" fill="white" opacity="0.9"/>
+        <polygon points="0,12 13,2 26,12" fill="white"/>
+        <rect x="9" y="16" width="8" height="8" rx="1" fill="#5BADD6"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-name" id="cityName">Ville de Thomery</div>
+      <span class="logo-sub">Commune · Seine et Marne</span>
+    </div>
+  </div>
+  <input type="file" id="logo-file" accept="image/*" onchange="changeLogo(event)">
+  <div class="header-badge">Quiz Citoyen</div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Connaissance de votre territoire</div>
+  <h1>Testez vos connaissances sur notre ville</h1>
+  <p>Un quiz interactif pour mieux connaître votre commune, son histoire, ses services et ses engagements.</p>
+</div>
+
+<div class="quiz-wrapper">
+  <div class="progress-bar-wrap" id="progressSection">
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">Question 1 / 20</div>
+    <div class="score-badge" id="scoreBadge">Score : 0</div>
+  </div>
+  <div id="quizArea"></div>
+</div>
+
+<script>
+const questions = [
+  {
+    text: "Quel a été le nom du premier festival cannin dans la ville de Thomery ?",
+    choices: ["WoofThom", "CanniThom", "ThomWoof", "CanniWoof"],
+    correct: 2,
+    explanation: "Le ThomWoof a été fait la premiere fois le 10 septembre 2024 dans les Jardin Salomon "},
+  {
+    text: "Comment la ville de Thomery est surnomée ?",
+    choices: ["La ville des vignes", "Village du raisin", "Village du vin", "Village de la vigne"],
+    correct: 3,
+    explanation: "La ville de thomery se surnomme le 'Village des vignes' en raison de sa culture traditionnelle du raisin, le chasselas. Cette ville est également connue pour son histoire riche et ses traditions, notamment la production du chasselas doré, qui a été une activité économique importante pendant plus de deux siècles."
+  },
+  {
+    text: "Pour quoi la ville de Thomery est-t-elle connue ?",
+    choices: ["Mairie", "Jardin Salomon", "Chasselas doré", "Eglise"],
+    correct: 2,
+    explanation: "La culture du Chasselas doré nécessite une attention particulière pour garantir une production optimale "},
+  {
+    text: "Quel artiste peintre et sculptri(ce)(eur) du XIX ème siècle est connu a Thomery ?",
+    choices: ["Pablo Picasso", "Rosa Bonheur", "Claude Monet", "Gustav Kilmt"],
+    correct: 1,
+    explanation: "Rosa Bonheur est connue à Thomery pour son rôle central dans la peinture animalière et son atelier, construit par l'architecte Jules Saulnier. Elle a acquis le château de By en 1859, où elle a vécu pendant quarante ans. Son atelier, qui a conservé ses décors peints, mobilier et effets personnels, est ouvert au public depuis 2017. Rosa Bonheur a également été la première femme à recevoir la Légion d'honneur, ce qui a marqué son époque et son impact sur l'art et la société. "
+  },  
+  {
+    text: "D'où provient le nom de la ville de Thomery de Henri IV",
+    choices: ["< Tout vas faire rire ici >", "< Tout me rit ici >", "< Ici tout me rit >", "< Ici il y a tout qui me rit >"],
+    correct: 2,
+    explanation: "La tradition locale prête à Henri IV un bon mot lors de son séjour dans la zone de Champagne-sur-Seine. En voyant le coteau de Thomery, il déclare : « Ici tout me rit »"
+  },
+  {
+    text: "Dans L'ancien temps qu'est-ce que le Jardin Salomon stockait ?",
+    choices: ["Des moutons", "Des Cheveaux", "Des vignes", "Caves a vin"],
+    correct: 2,
+    explanation: "Dans l'ancien temps ont stockais les vignes dans les serres et ont les cultivé au mur"
+  },
+  {
+    text: "Quel est le nom de la rivière qui passe dans la ville de Thomery ?",
+    choices: ["L'Orvanne", "Loing", "Rhône", "Seine"],
+    correct: 3,
+    explanation: "La seine descend de paris en passent par Thomery."
+  },
+    {
+    text: " Quelle est la particularité unique au monde du réseau de murs à vignes de Thomery ?",
+    choices: ["250 km", "100 km", "500 mètres", "400 km"],
+    correct: 0,
+    explanation: " Il s'étend sur 250 km, construit pour cultiver le chasselas doré en espalier sur des coteaux parfaitement orientés."
+  },
+    {
+    text: "Quelle était la production maximale de chasselas à Thomery vers 1900  ?",
+    choices: ["800 tonnes", "20 grammes", "500 tonnes", "Plus de 250 k/g"],
+    correct: 0,
+    explanation: "Vers 1900 la ville de Thomery etait fortement acrive"
+  },
+    {
+    text: "Rosa Bonheur était spécialisée dans la peinture de quoi ?",
+    choices: ["Animeaux", "Personnes", "Réaliste", "Abstrait"],
+    correct: 0,
+    explanation: "Rosa Bonheur s'est spécialisée dans la peinture animalières."
+  },
+    {
+    text: "Quelle grande forêt est située près de Thomery ?",
+    choices: ["Foêt de Fontainebleau", "Forêt des Landes", "Forêt de Haye", "Forêt de Tronçais"],
+    correct: 0,
+    explanation: "La forêt de Fontainebleau est la forêt la pljus proche de Thomery"
+  },
+    {
+    text: "En quelle année le dernier colis de chasselas a-t-il quitté Thomery ?",
+    choices: ["2015", "2010", "2026", "1970"],
+    correct: 3,
+    explanation: "Le dernier colis de chasselas a avoir quitté Thomery etait en 1970"
+  },
+    {
+    text: "Quelle émission de France 3 a mis Thomery en avant en 2024 ?",
+    choices: ["Le vin Tv ", "Le Village préféré des Français.", "Les Vignes a la TV", "La forêt du vin"],
+    correct: 1,
+    explanation: "Le Village préféré des Français ont mis Thomery en avant en 2024"
+  },
+    {
+    text: "Dans quel château vivait Rosa Bonheur à Thomery ?",
+    choices: ["Un Penthouse", "Le château de Chambord", "Le château de Versaille", "Le château de By"],
+    correct: 3,
+    explanation: "Le château de By a été sa maison pendant plusieurs anées"
+  },
+    {
+    text: "Quelle célébrité fit l'oraison funèbre du peintre Francis Gruber dans le cimetière de Thomery ?",
+    choices: ["Louis Aragon", "Pablo Piccasso", "Rosa Bonheur", "Alfred Sisley"],
+    correct: 0,
+    explanation: "Louis Aragon, et c'est Alberto Giacometti qui dessina sa tombe."
+  },
+    {
+    text: "Quels animaux insolites vivaient dans la ménagerie de Rosa Bonheur à Thomery ?",
+    choices: ["Vaches, chevaux, moutons, cerfs, et même une paire de lions apprivoisés.", "Des rongeur", "Des animeaux aquatiques"],
+    correct: 0,
+    explanation: "Rosa Bonheur est aussi connue pour avoir des animeaux de toutes races"
+  },
+    {
+    text: "Comment Rosa Bonheur a-t-elle financé l'achat du château de By à Thomery ?",
+    choices: ["Du vin", "Une vente de terrains", "Son tableau ' Le Marché aux chevaux '"],
+    correct: 3,
+    explanation: "Grâce à la vente de son tableau Le Marché aux chevaux, succès international du Salon de 1853."
+  },
+    {
+    text: "Qu'était 'Thomery-Plage', ouverte en 1925 ?",
+    choices: ["Station de loisir", "Port", "Barrage", "Pont"],
+    correct: 0,
+    explanation: "Une station de loisirs avec restaurant, salle de dancing animée par un jazz-band américain (le 'Patam-jazz'), baignade et promenades en barque, promue jusqu'à la Gare de Lyon à Paris."
+  },
+    {
+    text: "Quel roi de France a séjourné au château de la Rivière à Thomery en 1727 et 1732 ?",
+    choices: ["Louis XV", "Louis XIV", "Louis XVI", "Louis XIII"],
+    correct: 0,
+    explanation: "Louis XV, qui fit également paver le chemin menant de Thomery au château de Fontainebleau, l'Allée du Pavé du Prince."
+  },
+    {
+    text: "Quelle distinction Rosa Bonheur a-t-elle été la première femme à recevoir en 1865 ?",
+    choices: ["Ordres des Art et des Lettres", "Ordre National su Mérite", "Legion D'honneur", "Ordre de la libération "],
+    correct: 2,
+    explanation: "La Légion d'honneur, remise en main propre par l'impératrice Eugénie au château de By."
+  }
+];
+
+let current = 0, score = 0, answered = false;
+
+function changeLogo(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  document.getElementById('logoContainer').innerHTML = `<img src="${url}">`;
+}
+
+function updateProgress() {
+  const pct = (current / questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Question ${current + 1} / ${questions.length}`;
+  document.getElementById('scoreBadge').textContent = `Score : ${score}`;
+}
+
+function renderQuestion() {
+  answered = false;
+  updateProgress();
+  const q = questions[current];
+  const letters = ['A','B','C','D'];
+  const choicesHtml = q.choices.map((c, i) => `
+    <button class="choice-btn" onclick="answer(${i})" id="choice-${i}">
+      <span class="choice-letter">${letters[i]}</span>
+      <span>${c}</span>
+    </button>
+  `).join('');
+
+  document.getElementById('quizArea').innerHTML = `
+    <div class="card">
+      <div class="q-number">Question ${current + 1} sur ${questions.length}</div>
+      <div class="q-text">${q.text}</div>
+      ${q.hint ? `<div class="q-hint">${q.hint}</div>` : ''}
+      <div class="choices">${choicesHtml}</div>
+      <div id="feedback"></div>
+      <button class="next-btn" id="nextBtn" onclick="next()">
+        ${current < questions.length - 1 ? 'Question suivante →' : 'Voir mes résultats →'}
+      </button>
+    </div>
+  `;
+}
+
+function answer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const isCorrect = idx === q.correct;
+  if (isCorrect) score++;
+
+  document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+  document.getElementById(`choice-${idx}`).classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) document.getElementById(`choice-${q.correct}`).classList.add('correct');
+
+  document.getElementById('feedback').innerHTML = isCorrect
+    ? `<div class="feedback-badge vrai"><span class="feedback-icon">✅</span><div class="feedback-text"><strong>Bonne réponse !</strong>${q.explanation || ''}</div></div>`
+    : `<div class="feedback-badge faux"><span class="feedback-icon">❌</span><div class="feedback-text"><strong>Mauvaise réponse.</strong> La bonne réponse était : <strong>${q.choices[q.correct]}</strong>.<br>${q.explanation || ''}</div></div>`;
+
+  document.getElementById('nextBtn').style.display = 'block';
+  document.getElementById('scoreBadge').textContent = `Score : ${score}`;
+}
+
+function next() {
+  current++;
+  if (current >= questions.length) showResults();
+  else renderQuestion();
+}
+
+function showResults() {
+  document.getElementById('progressSection').style.display = 'none';
+  const pct = Math.round((score / questions.length) * 100);
+  const msg = pct >= 80 ? 'Félicitations ! Vous connaissez parfaitement votre ville.'
+    : pct >= 50 ? 'Bon résultat ! Vous êtes bien informé(e) sur votre commune.'
+    : 'Il y a encore des choses à découvrir sur votre territoire !';
+
+  document.getElementById('quizArea').innerHTML = `
+    <div class="results-card">
+      <div class="results-circle">
+        <div class="results-score-big">${score}/${questions.length}</div>
+        <div class="results-score-denom">${pct} %</div>
+      </div>
+      <div class="results-title">Quiz terminé !</div>
+      <div class="results-sub">${msg}</div>
+      <div class="results-breakdown">
+        <div class="breakdown-item"><div class="breakdown-num green">${score}</div><div class="breakdown-lbl">Bonnes réponses</div></div>
+        <div class="breakdown-item"><div class="breakdown-num red">${questions.length - score}</div><div class="breakdown-lbl">Mauvaises réponses</div></div>
+        <div class="breakdown-item"><div class="breakdown-num">${pct} %</div><div class="breakdown-lbl">Score final</div></div>
+      </div>
+      <button class="restart-btn" onclick="restart()">↺ Recommencer</button>
+    </div>
+  `;
+}
+
+function restart() {
+  current = 0; score = 0;
+  document.getElementById('progressSection').style.display = 'flex';
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
+</body>
+</html>

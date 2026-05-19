@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bientôt Disponible</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --bleu:#5BADD6;
+  --jaune:#D4B84A;
+  --fond:#F2EFE8;
+  --texte:#2A2820;
+  --card:#ffffff;
+  --radius:22px;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  min-height:100vh;
+  background:var(--fond);
+  font-family:'DM Sans',sans-serif;
+  overflow:hidden;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* FONDS */
+
+.bg-circle{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(10px);
+  opacity:0.12;
+}
+
+.circle1{
+  width:420px;
+  height:420px;
+  background:var(--bleu);
+  top:-120px;
+  left:-120px;
+}
+
+.circle2{
+  width:320px;
+  height:320px;
+  background:var(--jaune);
+  bottom:-100px;
+  right:-100px;
+}
+
+/* CARD */
+
+.card{
+  width:90%;
+  max-width:720px;
+  background:rgba(255,255,255,0.75);
+  backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.5);
+  border-radius:var(--radius);
+  padding:70px 50px;
+  text-align:center;
+  position:relative;
+  z-index:2;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+/* BADGE */
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:#EDF5FB;
+  color:#1A5A8A;
+  padding:8px 16px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  margin-bottom:26px;
+}
+
+.badge-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--bleu);
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);opacity:1;}
+  50%{transform:scale(1.5);opacity:0.5;}
+  100%{transform:scale(1);opacity:1;}
+}
+
+/* TITRE */
+
+h1{
+  font-family:'Playfair Display',serif;
+  font-size:58px;
+  line-height:1.05;
+  color:var(--texte);
+  margin-bottom:22px;
+}
+
+h1 span{
+  color:var(--bleu);
+}
+
+/* TEXTE */
+
+.desc{
+  font-size:17px;
+  color:#6B6457;
+  line-height:1.8;
+  max-width:520px;
+  margin:0 auto 40px;
+}
+
+/* BOUTON */
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:16px 30px;
+  border-radius:14px;
+  background:var(--texte);
+  color:#fff;
+  text-decoration:none;
+  font-size:15px;
+  font-weight:500;
+  transition:0.25s;
+}
+
+.btn:hover{
+  transform:translateY(-3px);
+  background:#3A372F;
+  box-shadow:0 10px 30px rgba(0,0,0,0.12);
+}
+
+/* FOOTER */
+
+.footer{
+  margin-top:40px;
+  font-size:12px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:#9B9385;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+  .card{
+    padding:50px 28px;
+  }
+
+  h1{
+    font-size:40px;
+  }
+
+  .desc{
+    font-size:15px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg-circle circle1"></div>
+<div class="bg-circle circle2"></div>
+
+<div class="card">
+
+  <div class="badge">
+    <span class="badge-dot"></span>
+    En préparation
+  </div>
+
+  <h1>
+    Ça arrive<br>
+    <span>bientôt.</span>
+  </h1>
+
+  <p class="desc">
+    Cette page est actuellement en cours de création.
+    Revenez très prochainement pour découvrir le contenu,
+    les quiz et les nouveautés de Thomery.
+  </p>
+
+  <a href="accueil_quiz_thomery.html" class="btn">
+    ← Retour à l'accueil
+  </a>
+
+  <div class="footer">
+    Ville de Thomery · Quiz Citoyen
+  </div>
+
+</div>
+
+</body>
+</html>

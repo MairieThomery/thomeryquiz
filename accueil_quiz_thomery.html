@@ -1,0 +1,470 @@
+<style>
+:root {
+  --bleu: #5BADD6;
+  --jaune: #D4B84A;
+  --gris: #6B6457;
+  --vert: #5A9E00;
+  --fond: #F2EFE8;
+  --texte: #2A2820;
+  --radius: 14px;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--fond);
+  color:var(--texte);
+  min-height:100vh;
+}
+
+/* HEADER */
+
+header{
+  background:var(--texte);
+  padding:0 40px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:72px;
+}
+
+.logo-zone{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  cursor:pointer;
+}
+
+.logo-img{
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  background:var(--bleu);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  border:2px solid rgba(255,255,255,0.15);
+}
+
+.logo-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.logo-name{
+  font-family:'Playfair Display',serif;
+  color:#fff;
+  font-size:17px;
+}
+
+.logo-sub{
+  font-size:10px;
+  color:rgba(255,255,255,0.45);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  margin-top:1px;
+  display:block;
+}
+
+#logo-file{
+  display:none;
+}
+
+.header-badge{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  color:rgba(255,255,255,0.7);
+  font-size:12px;
+  padding:6px 14px;
+  border-radius:20px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+
+/* HERO */
+
+.hero{
+  background:var(--texte);
+  padding:64px 40px 100px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero::before{
+  content:'';
+  position:absolute;
+  left:-80px;
+  top:-80px;
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  background:var(--bleu);
+  opacity:0.07;
+}
+
+.hero::after{
+  content:'';
+  position:absolute;
+  right:-60px;
+  bottom:-60px;
+  width:240px;
+  height:240px;
+  border-radius:50%;
+  background:var(--jaune);
+  opacity:0.08;
+}
+
+.hero-eyebrow{
+  font-size:11px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--jaune);
+  margin-bottom:16px;
+}
+
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:44px;
+  color:#fff;
+  line-height:1.15;
+  margin-bottom:14px;
+}
+
+.hero p{
+  color:rgba(255,255,255,0.5);
+  font-size:15px;
+  max-width:440px;
+  margin:0 auto;
+  line-height:1.7;
+}
+
+/* CARDS */
+
+.cards-wrap{
+  max-width:760px;
+  margin:-52px auto 60px;
+  padding:0 24px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  position:relative;
+  z-index:10;
+}
+
+.quiz-card{
+  background:#fff;
+  border-radius:var(--radius);
+  padding:36px 32px 32px;
+  border:1px solid rgba(0,0,0,0.07);
+  cursor:pointer;
+  transition:0.2s;
+  position:relative;
+  overflow:hidden;
+}
+
+.quiz-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 12px 32px rgba(0,0,0,0.1);
+}
+
+.quiz-card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:4px;
+}
+
+.quiz-card.enfant::before{
+  background:var(--vert);
+}
+
+.quiz-card.adulte::before{
+  background:var(--bleu);
+}
+
+.card-icon{
+  width:56px;
+  height:56px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  margin-bottom:20px;
+}
+
+.quiz-card.enfant .card-icon{
+  background:#EEF7E6;
+}
+
+.quiz-card.adulte .card-icon{
+  background:#EDF5FB;
+}
+
+.card-tag{
+  display:inline-block;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  padding:4px 10px;
+  border-radius:20px;
+  margin-bottom:12px;
+}
+
+.quiz-card.enfant .card-tag{
+  background:#EEF7E6;
+  color:#2D6010;
+}
+
+.quiz-card.adulte .card-tag{
+  background:#EDF5FB;
+  color:#1A5A8A;
+}
+
+.card-title{
+  font-family:'Playfair Display',serif;
+  font-size:22px;
+  margin-bottom:10px;
+}
+
+.card-desc{
+  font-size:14px;
+  color:var(--gris);
+  line-height:1.6;
+  margin-bottom:24px;
+}
+
+.card-meta{
+  display:flex;
+  gap:16px;
+  margin-bottom:24px;
+  flex-wrap:wrap;
+}
+
+.meta-item{
+  font-size:12px;
+  color:var(--gris);
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.meta-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+}
+
+.quiz-card.enfant .meta-dot{
+  background:var(--vert);
+}
+
+.quiz-card.adulte .meta-dot{
+  background:var(--bleu);
+}
+
+.card-btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.quiz-card.enfant .card-btn{
+  background:var(--vert);
+  color:#fff;
+}
+
+.quiz-card.adulte .card-btn{
+  background:var(--bleu);
+  color:#fff;
+}
+
+.card-btn:hover{
+  opacity:0.9;
+}
+
+@media(max-width:700px){
+
+  .cards-wrap{
+    grid-template-columns:1fr;
+  }
+
+  .hero h1{
+    font-size:34px;
+  }
+
+  header{
+    padding:0 20px;
+  }
+
+}
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<header>
+
+  <div class="logo-zone" onclick="document.getElementById('logo-file').click()">
+
+    <div class="logo-img" id="logoContainer">
+
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="10" width="22" height="14" rx="2" fill="white" opacity="0.9"/>
+        <polygon points="0,12 13,2 26,12" fill="white"/>
+        <rect x="9" y="16" width="8" height="8" rx="1" fill="#5BADD6"/>
+      </svg>
+
+    </div>
+
+    <div>
+      <div class="logo-name">Ville de Thomery</div>
+      <span class="logo-sub">Seine-et-Marne · 77810</span>
+    </div>
+
+  </div>
+
+  <input type="file" id="logo-file" accept="image/*" onchange="changeLogo(event)">
+
+  <div class="header-badge">
+    Quiz Citoyen
+  </div>
+
+</header>
+
+<section class="hero">
+
+  <div class="hero-eyebrow">
+    Connaissance de votre territoire
+  </div>
+
+  <h1>
+    Testez vos connaissances<br>
+    sur Thomery
+  </h1>
+
+  <p>
+    Choisissez votre quiz et découvrez l'histoire,
+    les curiosités et le patrimoine de notre belle commune.
+  </p>
+
+</section>
+
+<div class="cards-wrap">
+
+  <!-- ENFANT -->
+
+  <div class="quiz-card enfant"
+       onclick="window.location.href='preview.html'">
+
+    <div class="card-icon">🧒</div>
+
+    <div class="card-tag">Enfants</div>
+
+    <div class="card-title">
+      Quiz Junior
+    </div>
+
+    <div class="card-desc">
+      Des questions amusantes sur Thomery,
+      faciles et rapides pour les enfants.
+    </div>
+
+    <div class="card-meta">
+
+      <span class="meta-item">
+        <span class="meta-dot"></span>
+        10 questions
+      </span>
+
+      <span class="meta-item">
+        <span class="meta-dot"></span>
+        Vrai / Faux
+      </span>
+
+      <span class="meta-item">
+        <span class="meta-dot"></span>
+        Dès 7 ans
+      </span>
+
+    </div>
+
+    <button class="card-btn">
+      Jouer →
+    </button>
+
+  </div>
+
+  <!-- ADULTE -->
+
+  <div class="quiz-card adulte"
+       onclick="window.location.href='quiz_mairie_final.html'">
+
+    <div class="card-icon">🏛️</div>
+
+    <div class="card-tag">Adultes</div>
+
+    <div class="card-title">
+      Quiz Adultes
+    </div>
+
+    <div class="card-desc">
+      Découvrez l'histoire et le patrimoine
+      de Thomery avec des questions plus difficiles.
+    </div>
+
+    <div class="card-meta">
+
+      <span class="meta-item">
+        <span class="meta-dot"></span>
+        20 questions
+      </span>
+
+      <span class="meta-item">
+        <span class="meta-dot"></span>
+        QCM
+      </span>
+
+      <span class="meta-item">
+        <span class="meta-dot"></span>
+        Tout public
+      </span>
+
+    </div>
+
+    <button class="card-btn">
+      Jouer →
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+function changeLogo(e){
+
+  const f = e.target.files[0];
+
+  if(!f) return;
+
+  document.getElementById('logoContainer').innerHTML =
+    `<img src="${URL.createObjectURL(f)}">`;
+
+}
+</script>
